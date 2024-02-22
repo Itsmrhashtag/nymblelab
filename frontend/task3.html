@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Package Information</title>
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+
+<table id="packageTable">
+    <thead>
+        <tr>
+            <th>Passenger Name</th>
+            <th>Passenger Number</th>
+            <th>Passenger Balance</th>
+            <th>Activity Enrolled</th>
+            <th>Activity Cost</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script>
+fetch('http://localhost:8080/packages')
+  .then(response => response.json())
+  .then(data => {
+    const tableBody = document.querySelector('#packageTable tbody');
+    data.forEach(package => {
+        package.destination.forEach(destination => {
+            destination.activities.forEach(activity => {
+                activity.passenger.forEach(passengers=>{
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${passengers.name}</td>
+              <td>${passengers.number}</td>
+              <td>${passengers.balance}</td>
+              <td>${activity.name}</td>
+              <td>${activity.cost}</td>
+            `;
+            tableBody.appendChild(row);
+          }) 
+      })
+    });
+  })
+})
+  .catch(error => {
+    console.error('Error fetching data:', error);
+  });
+</script>
+
+</body>
+</html>
